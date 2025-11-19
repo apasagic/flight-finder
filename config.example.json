@@ -1,0 +1,9 @@
+{
+  "api": {
+    "base_url": "https://google-flights4.p.rapidapi.com",
+    "headers": {
+      "x-rapidapi-key": "your_rapidapi_key_here",
+      "x-rapidapi-host": "google-flights4.p.rapidapi.com"
+    }
+  }
+}
