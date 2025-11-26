@@ -11,6 +11,22 @@ import random
 # retTok = "your_token_here"
 
 #########################################
+#             load_config               #
+#########################################
+
+# Load configuration from JSON file
+def load_config(config_file='config.json'):
+    try:
+        with open(config_file, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"Error: {config_file} not found. Please copy config.example.json to config.json and add your API keys.")
+        exit(1)
+    except json.JSONDecodeError:
+        print(f"Error: Invalid JSON in {config_file}")
+        exit(1)
+
+#########################################
 #           pretty_df_print             #
 #########################################
 
@@ -101,13 +117,19 @@ def get_request(base_url, endpoint_path, headers, retTok=None, max_retries=5):
 #          get_outgoing_flight          #
 #########################################
 
-def get_outgoing_flight(departureId, arrivalId, departureDate, returnDate, flightDuration, maxPrice, base_url_google_flights, headers):
+def get_outgoing_flight(departureId, arrivalId, departureDate, returnDate, flightDuration, maxPrice, base_url_google_flights, headers, isRoundtrip):
    # conn = http.client.HTTPSConnection("google-flights4.p.rapidapi.com") # No longer needed with requests
 
    arrivalDate = datetime.strptime(departureDate, "%Y-%m-%d") + timedelta(days=1)
    datestr = arrivalDate.strftime("%Y-%m-%d")
-   req_path = f"/flights/search-roundtrip?departureId={departureId}&arrivalId={arrivalId}&departureDate={departureDate}&arrivalDate={returnDate}"
-   req_path += f"&currency=EUR&sort=2&flightDuration={flightDuration}&maxPrice={maxPrice}"
+
+   if isRoundtrip:
+    req_path = f"/flights/search-roundtrip?departureId={departureId}&arrivalId={arrivalId}&departureDate={departureDate}&arrivalDate={returnDate}"
+   else:
+    # no return date for one way
+    req_path = f"/flights/search-one-way?departureId={departureId}&arrivalId={arrivalId}&departureDate={departureDate}"
+
+    req_path += f"&currency=EUR&sort=2&flightDuration={flightDuration}&maxPrice={maxPrice}"
    #req_path = f"/flights/search-one-way?departureId={departureId}&arrivalId={arrivalID}&departureDate={departureDate}&arrivalDate={arrivalDate.strftime("%Y-%m-%d")}"
 
    # Call the updated get_request function
