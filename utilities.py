@@ -129,7 +129,7 @@ def get_outgoing_flight(departureId, arrivalId, departureDate, returnDate, fligh
     # no return date for one way
     req_path = f"/flights/search-one-way?departureId={departureId}&arrivalId={arrivalId}&departureDate={departureDate}"
 
-    req_path += f"&currency=EUR&sort=2&flightDuration={flightDuration}&maxPrice={maxPrice}"
+   req_path += f"&currency=EUR&sort=2&flightDuration={flightDuration}&maxPrice={maxPrice}"
    #req_path = f"/flights/search-one-way?departureId={departureId}&arrivalId={arrivalID}&departureDate={departureDate}&arrivalDate={arrivalDate.strftime("%Y-%m-%d")}"
 
    # Call the updated get_request function

@@ -183,16 +183,16 @@ def run_flight_search(
 if __name__ == "__main__":
     # Example run
     df = run_flight_search(
-        departureId="BER",
+        departureId="IST",
         arrivalId="BKK",
-        departureDateStart="2026-01-05",
-        departureDateEnd="2026-02-15",
+        departureDateStart="2025-12-22",
+        departureDateEnd="2026-02-25",
         minDurationDays=15,
         maxDurationDays=23,
         maxPrice="850",
         adults="1",
-        maxDuration=30,
-        maxFlights=6,
+        maxDuration=16,
+        maxFlights=4,
         isRoundtrip=True
     )
 
