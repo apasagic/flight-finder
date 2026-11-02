@@ -1,0 +1,26 @@
+# Secrets
+config.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.tmp/
+
+# Flight Finder runtime data
+.flight_finder_cache/
+flight_search_results/
+flight_cache*/
+search_errors.csv
+summary.json
+
+# Generated exports
+*.csv
+*.xlsx
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
