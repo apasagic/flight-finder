@@ -11,10 +11,10 @@ requires a RapidAPI key and currently fails when the account is not subscribed
 to that API. The v2 implementation uses the open-source `fast-flights` client
 instead and does not require an API key.
 
-| Capability | Original `main.py` / `app.py` | `flight_finder_v2.py` |
+| Capability | Legacy `main.py` | Current `flight_finder_v2.py` + `app.py` |
 |---|---|---|
 | Data source | RapidAPI subscription | Google Flights via `fast-flights` |
-| Interface | Python function and Streamlit UI | Reproducible CLI batch search |
+| Interface | Python function | Reproducible CLI plus optional Streamlit UI |
 | Destinations | One destination per run | Multiple airports per run |
 | Ticket strategies | Round trip or paired one-ways | Round trip, paired one-ways, and open-jaw pairs |
 | Constraints | Price and duration | Stops, elapsed duration, individual layover, dates, and stay length |
@@ -22,8 +22,9 @@ instead and does not require an API key.
 | Outputs | One continuously rewritten CSV | Four CSVs plus a machine-readable summary |
 | Return details | Parsed from the RapidAPI returning token | Round-trip return must be confirmed from the generated Google Flights link |
 
-The original files remain in the repository as a legacy UI and historical
-reference. They are not used by v2.
+The original `main.py` remains as a historical reference. The current `app.py`
+is a dual-mode entry point for the v2 implementation: Streamlit uses it as a
+browser interface, while ordinary Python execution falls back to the CLI.
 
 ## Installation
 
@@ -36,6 +37,25 @@ py -3 -m venv .venv
 
 On macOS or Linux, activate the virtual environment with
 `source .venv/bin/activate` and use `python` in the commands below.
+
+### Optional browser interface
+
+Install the separate UI requirements and start Streamlit:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-ui.txt
+.\.venv\Scripts\python.exe -m streamlit run app.py
+```
+
+The form opens at `http://localhost:8501`. It supports multiple destination
+airports, a flexible departure window, stay length, stops, total travel time,
+individual layover limits, and full or shortlisted round-trip scans. The
+**Load example results** button demonstrates the tables without contacting the
+flight provider.
+
+![Flight Finder search form](docs/images/flight-finder-search.jpg)
+
+![Flight Finder example results](docs/images/flight-finder-results.jpg)
 
 ## Example search
 
@@ -62,6 +82,29 @@ individual layover longer than 2 hours 30 minutes.
 Use `--dry-run` to print the number of planned queries without contacting the
 provider. Use `--roundtrip-mode shortlist` for a faster first pass, or `skip`
 when only separate one-way combinations are needed.
+
+`app.py` can also be used as the command-line entry point. This works even when
+Streamlit is not installed:
+
+```powershell
+.\.venv\Scripts\python.exe .\app.py `
+  --origin BER `
+  --destinations LCA PFO ECN `
+  --departure-start 2027-10-01 `
+  --departure-end 2027-10-20 `
+  --min-stay 5 `
+  --max-stay 7 `
+  --max-stops 1 `
+  --max-duration-minutes 480 `
+  --max-layover-minutes 150 `
+  --roundtrip-mode full `
+  --output-dir .\flight_search_results `
+  --cache-dir .\.flight_finder_cache
+```
+
+For a quick configuration check, append `--dry-run`. A normal run writes the
+ranked separate-ticket combinations, advertised round trips, qualifying
+one-way options, errors, and a JSON summary to `flight_search_results`.
 
 ## Outputs
 
